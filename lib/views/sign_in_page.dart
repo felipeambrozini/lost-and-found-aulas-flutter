@@ -1,3 +1,4 @@
+//login
 import 'package:flutter/material.dart';
 import 'package:lost_and_found/services/auth.dart';
 import 'package:lost_and_found/views/home_page.dart';
@@ -28,6 +29,7 @@ class _SignInPageState extends State<SignInPage> {
               _showPasswordTextField(),
               _showSignInButton(),
               _showSignUpButton(),
+              _showGoogleSigninButton(),
             ],
           ),
         ),
@@ -82,6 +84,13 @@ class _SignInPageState extends State<SignInPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 32.0),
       child: RaisedButton(child: Text('LOGIN'), onPressed: _signIn),
+    );
+  }
+
+  Widget _showGoogleSigninButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 32.0),
+      child: RaisedButton(child: Text('Entrar com a conta do Google'), onPressed: _signIn),
     );
   }
 
