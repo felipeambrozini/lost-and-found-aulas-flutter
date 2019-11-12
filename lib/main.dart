@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         UseTermPage.routeName: (context) => new UseTermPage(),
         FoundPage.routeName: (context) => new FoundPage(),
       },
-      home: RootPage(),
+      home: MyHomePage(),
     );
   } 
 }
