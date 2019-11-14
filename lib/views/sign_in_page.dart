@@ -1,4 +1,4 @@
-//login
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:lost_and_found/services/auth.dart';
 import 'package:lost_and_found/views/home_page.dart';
@@ -22,18 +22,21 @@ class _SignInPageState extends State<SignInPage> {
       body: Center(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              _showEmailTextField(),
-              _showPasswordTextField(),
-              _showSignInButton(),
-              _showSignUpButton(),
-              _showGoogleSigninButton(),
-            ],
-          ),
+          child: _buildForm(),
         ),
       ),
+    );
+  }
+
+  Widget _buildForm() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        _showEmailTextField(),
+        _showPasswordTextField(),
+        _showSignInButton(),
+        _showSignUpButton(),
+      ],
     );
   }
 
@@ -69,15 +72,25 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  Future _signIn() async {
+  Future<void> _signIn() async {
     final email = _emailController.text;
     final password = _passwordController.text;
-    await Auth.signIn(email, password).then(_onResultSignInSuccess);
+    await Auth.signIn(email, password)
+        .then(_onSignInSuccess)
+        .catchError((error) {
+      print('Caught error: $error');
+      Flushbar(
+        title: 'Erro',
+        message: error.toString(),
+        duration: Duration(seconds: 3),
+      )..show(context);
+    });
   }
 
-  void _onResultSignInSuccess(String userId) {
-    print('SignIn: $userId');
-    Navigator.of(context).pushReplacementNamed(HomePage.routeName);
+  Future _onSignInSuccess(String userId) async {
+    final user = await Auth.getUser(userId);
+    await Auth.storeUserLocal(user);
+    Navigator.pushReplacementNamed(context, HomePage.routeName);
   }
 
   Widget _showSignInButton() {
@@ -87,15 +100,8 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  Widget _showGoogleSigninButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 32.0),
-      child: RaisedButton(child: Text('Entrar com a conta do Google'), onPressed: _signIn),
-    );
-  }
-
   void _signUp() {
-    Navigator.of(context).pushReplacementNamed(SignUpPage.routeName);
+    Navigator.pushReplacementNamed(context, SignUpPage.routeName);
   }
 
   Widget _showSignUpButton() {

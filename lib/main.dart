@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lost_and_found/themes/theme.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:lost_and_found/views/about_page.dart';
 import 'package:lost_and_found/views/found_page.dart';
 import 'package:lost_and_found/views/home_page.dart';
+import 'package:lost_and_found/views/lost_object_detail_page.dart';
 import 'package:lost_and_found/views/profile_page.dart';
 import 'package:lost_and_found/views/root_page.dart';
 import 'package:lost_and_found/views/sign_in_page.dart';
@@ -19,10 +20,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Achados e Perdidos',
-      theme: myTheme,
+      theme: new ThemeData(
+        primarySwatch: Colors.amber
+      ),
       debugShowCheckedModeBanner: false,
+      home: MyHomePage(),
+      
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
+        RootPage.routeName: (context) => new RootPage(),
         SignInPage.routeName: (context) => new SignInPage(),
         SignUpPage.routeName: (context) => new SignUpPage(),
         HomePage.routeName: (context) => new HomePage(),
@@ -30,10 +36,21 @@ class MyApp extends StatelessWidget {
         ProfilePage.routeName: (context) => new ProfilePage(),
         UseTermPage.routeName: (context) => new UseTermPage(),
         FoundPage.routeName: (context) => new FoundPage(),
+        LostObjectDetailPage.routeName: (context) => new LostObjectDetailPage(),
       },
-      home: MyHomePage(),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        const Locale('pt'), 
+        const Locale('en'), 
+        const Locale('es'), 
+      ],
     );
-  } 
+
+  }
 }
 
 class MyHomePage extends StatefulWidget {
@@ -43,7 +60,6 @@ class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
-
 
 class _MyHomePageState extends State<MyHomePage> {
   @override
@@ -56,17 +72,17 @@ Widget _introScreen() {
   return Stack(
     children: <Widget>[
       SplashScreen(
-        seconds: 2,
+        seconds: 3,
         gradientBackground: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
           colors: [
-            Color(0xffED213A),
-            Color(0xff93291E)
+            Color(0xff2e8b57),
+            Color(0xff2e8b57)
           ],
         ),
         navigateAfterSeconds: RootPage(),
-        loaderColor: Colors.transparent,
+        loaderColor: Colors.green,
       ),
       Container(
         decoration: BoxDecoration(
@@ -78,4 +94,5 @@ Widget _introScreen() {
       ),
     ],
   );
+  
 }

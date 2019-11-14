@@ -24,6 +24,6 @@ class _UseTermPageState extends State<UseTermPage> {
   }
 
   Widget _buildBody() {
-    return Center(child: Text('Bem vindo ao aplicativo Achados e Perdidos, com ele pode registrar objetos encontrados'));
+    return Center(child: Text('Em construção!'));
   }
 }
