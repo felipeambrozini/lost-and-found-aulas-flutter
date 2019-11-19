@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lost_and_found/services/auth.dart';
+import 'package:lost_and_found/services/google_sign_in.dart';
 import 'package:lost_and_found/views/home_page.dart';
 import 'package:lost_and_found/views/sign_up.page.dart';
 
@@ -36,6 +39,7 @@ class _SignInPageState extends State<SignInPage> {
         _showPasswordTextField(),
         _showSignInButton(),
         _showSignUpButton(),
+       _showGoogleSignInButton(),
       ],
     );
   }
@@ -96,15 +100,108 @@ class _SignInPageState extends State<SignInPage> {
   Widget _showSignInButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 32.0),
-      child: RaisedButton(child: Text('LOGIN'), onPressed: _signIn),
+      child: RaisedButton(child: Text('Login'), onPressed: _signIn),
     );
   }
 
-  void _signUp() {
-    Navigator.pushReplacementNamed(context, SignUpPage.routeName);
+  Widget _showGoogleSignInButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 32.0),
+      child: RaisedButton(child: Text('Login com conta do Google'), onPressed: () => StateWidget.of(context).signInWithGoogle()),
+            
+          );
+        }
+      
+        void _signUp() {
+          Navigator.pushReplacementNamed(context, SignUpPage.routeName);
+        }
+      
+        Widget _showSignUpButton() {
+          return FlatButton(child: Text('Cadastrar-se'), onPressed: _signUp);
+        }
+      }
+      
+  class StateWidget extends StatefulWidget {
+  final StateModel state;
+  final Widget child;
+
+  StateWidget({
+    @required this.child,
+    this.state,
+  });
+
+  static _StateWidgetState of(BuildContext context) {
+    return (context.inheritFromWidgetOfExactType(_StateDataWidget)
+            as _StateDataWidget)
+        .data;
   }
 
-  Widget _showSignUpButton() {
-    return FlatButton(child: Text('Registrar-se'), onPressed: _signUp);
+  @override
+  _StateWidgetState createState() => new _StateWidgetState();
+}
+
+class _StateWidgetState extends State<StateWidget> {
+  StateModel state;
+  GoogleSignInAccount googleAccount;
+  final GoogleSignIn googleSignIn = new GoogleSignIn();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.state != null) {
+      state = widget.state;
+    } else {
+      state = new StateModel(isLoading: true);
+      initUser();
+    }
   }
+
+  Future<Null> initUser() async {
+    googleAccount = await getSignedInAccount(googleSignIn);
+        if (googleAccount == null) {
+          setState(() {
+            state.isLoading = false;
+          });
+        } else {
+          await signInWithGoogle();
+        }
+      }
+      
+      Future<Null> signInWithGoogle() async {
+        if (googleAccount == null) {
+          // Start the sign-in process:
+          googleAccount = await googleSignIn.signIn();
+        }
+        
+      }
+    
+      @override
+      Widget build(BuildContext context) {
+        return new _StateDataWidget(
+          data: this,
+          child: widget.child,
+        );
+      }
+    
+      getSignedInAccount(googleSignIn) {}
+}
+
+class _StateDataWidget extends InheritedWidget {
+  final _StateWidgetState data;
+  _StateDataWidget({
+    Key key,
+    @required Widget child,
+    @required this.data,
+  }) : super(key: key, child: child);
+
+  @override
+  bool updateShouldNotify(_StateDataWidget old) => true;
+}
+class StateModel {
+  bool isLoading;
+  FirebaseUser user;
+  StateModel({  
+    this.isLoading = false,
+    this.user, 
+  });
 }
