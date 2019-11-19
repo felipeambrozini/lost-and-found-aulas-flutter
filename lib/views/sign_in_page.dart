@@ -3,7 +3,6 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lost_and_found/services/auth.dart';
-import 'package:lost_and_found/services/google_sign_in.dart';
 import 'package:lost_and_found/views/home_page.dart';
 import 'package:lost_and_found/views/sign_up.page.dart';
 
