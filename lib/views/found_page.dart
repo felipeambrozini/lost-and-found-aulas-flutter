@@ -64,7 +64,6 @@ class _FoundPageState extends State<FoundPage> {
 
   Widget _buildBody() {
     if (_currentUser == null) return Common.progressContainer();
-
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance
           .collection('lost_objects')

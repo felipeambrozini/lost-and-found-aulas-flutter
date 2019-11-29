@@ -40,8 +40,7 @@ class LostObject {
         pictureUrl: json["pictureUrl"] == null ? null : json["pictureUrl"],
         local: json["local"] == null ? null : json["local"],
         date: json["date"] == null ? null : json["date"],
-        finderUserId:
-            json["finderUserId"] == null ? null : json["finderUserId"],
+        finderUserId: json["finderUserId"] == null ? null : json["finderUserId"],
       );
 
   Map<String, dynamic> toMap() => {
